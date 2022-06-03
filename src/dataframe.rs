@@ -148,7 +148,7 @@ impl PyDataFrame {
 
         let df = self
             .df
-            .join(right.df, join_type, &join_keys.0, &join_keys.1)?;
+            .join(right.df, join_type, &join_keys.0, &join_keys.1, None)?;
         Ok(Self::new(df))
     }
 

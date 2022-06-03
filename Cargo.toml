@@ -31,9 +31,12 @@ rust-version = "1.57"
 tokio = { version = "1.0", features = ["macros", "rt", "rt-multi-thread", "sync"] }
 rand = "0.7"
 pyo3 = { version = "~0.16.5", features = ["extension-module", "abi3", "abi3-py37"] }
-datafusion = { version = "^8.0.0", features = ["pyarrow"] }
-datafusion-expr = { version = "^8.0.0" }
-datafusion-common = { version = "^8.0.0", features = ["pyarrow"] }
+#datafusion = { version = "^8.0.0", features = ["pyarrow"] }
+#datafusion-expr = { version = "^8.0.0" }
+#datafusion-common = { version = "^8.0.0", features = ["pyarrow"] }
+datafusion = {git="https://github.com/apache/arrow-datafusion", rev = "585bc3a629b92ea7a86ebfe8bf762dbef4155710", features=["pyarrow"]}
+datafusion-expr = {git="https://github.com/apache/arrow-datafusion", rev = "585bc3a629b92ea7a86ebfe8bf762dbef4155710"}
+datafusion-common = {git="https://github.com/apache/arrow-datafusion", rev = "585bc3a629b92ea7a86ebfe8bf762dbef4155710"}
 uuid = { version = "0.8", features = ["v4"] }
 mimalloc = { version = "*", default-features = false }
 
