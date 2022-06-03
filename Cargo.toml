@@ -38,7 +38,9 @@ datafusion = {git="https://github.com/apache/arrow-datafusion", rev = "585bc3a62
 datafusion-expr = {git="https://github.com/apache/arrow-datafusion", rev = "585bc3a629b92ea7a86ebfe8bf762dbef4155710"}
 datafusion-common = {git="https://github.com/apache/arrow-datafusion", rev = "585bc3a629b92ea7a86ebfe8bf762dbef4155710"}
 uuid = { version = "0.8", features = ["v4"] }
+
 mimalloc = { version = "*", default-features = false }
+ballista = { git = "https://github.com/apache/arrow-ballista", rev = "9e78b8ecd55cc3e9d46387c87098c4e6625294eb"}
 
 [lib]
 name = "datafusion_python"
