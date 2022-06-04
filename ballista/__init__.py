@@ -24,15 +24,14 @@ except ImportError:
     import importlib_metadata
 
 
+import datafusion
+
 import pyarrow as pa
 
 from ._internal import (
-    AggregateUDF,
     DataFrame,
-    SessionContext,
     BallistaContext,
     Expression,
-    ScalarUDF,
 )
 
 
@@ -41,7 +40,6 @@ __version__ = importlib_metadata.version(__name__)
 
 __all__ = [
     "DataFrame",
-    "SessionContext",
     "BallistaContext",
     "Expression",
     "AggregateUDF",
@@ -93,7 +91,7 @@ def udf(func, input_types, return_type, volatility, name=None):
         raise TypeError("`func` argument must be callable")
     if name is None:
         name = func.__qualname__
-    return ScalarUDF(
+    return datafusion.ScalarUDF(
         name=name,
         func=func,
         input_types=input_types,
@@ -110,7 +108,7 @@ def udaf(accum, input_type, return_type, state_type, volatility, name=None):
         raise TypeError("`accum` must implement the abstract base class Accumulator")
     if name is None:
         name = accum.__qualname__
-    return AggregateUDF(
+    return datafusion.AggregateUDF(
         name=name,
         accumulator=accum,
         input_type=input_type,

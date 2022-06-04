@@ -19,9 +19,10 @@ use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use std::path::PathBuf;
 
-use crate::dataframe::PyDataFrame;
 use crate::errors::BallistaError;
 use crate::utils::wait_for_future;
+
+use crate::dataframe::PyDataFrame;
 use ballista::prelude::*;
 use datafusion::arrow::datatypes::Schema;
 use datafusion::prelude::{AvroReadOptions, CsvReadOptions, ParquetReadOptions};

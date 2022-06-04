@@ -19,14 +19,10 @@ use mimalloc::MiMalloc;
 use pyo3::prelude::*;
 
 mod ballista_context;
-pub mod catalog;
-mod context;
 mod dataframe;
 pub mod errors;
 mod expression;
 mod functions;
-mod udaf;
-mod udf;
 pub mod utils;
 
 #[global_allocator]
@@ -39,15 +35,9 @@ static GLOBAL: MiMalloc = MiMalloc;
 #[pymodule]
 fn _internal(py: Python, m: &PyModule) -> PyResult<()> {
     // Register the python classes
-    m.add_class::<catalog::PyCatalog>()?;
-    m.add_class::<catalog::PyDatabase>()?;
-    m.add_class::<catalog::PyTable>()?;
-    m.add_class::<context::PySessionContext>()?;
     m.add_class::<ballista_context::PyBallistaContext>()?;
     m.add_class::<dataframe::PyDataFrame>()?;
     m.add_class::<expression::PyExpr>()?;
-    m.add_class::<udf::PyScalarUDF>()?;
-    m.add_class::<udaf::PyAggregateUDF>()?;
 
     // Register the functions as a submodule
     let funcs = PyModule::new(py, "functions")?;

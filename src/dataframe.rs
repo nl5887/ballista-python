@@ -15,8 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
+use crate::errors::DataFusionError;
+use crate::expression::PyExpr;
 use crate::utils::wait_for_future;
-use crate::{errors::DataFusionError, expression::PyExpr};
 use datafusion::arrow::datatypes::Schema;
 use datafusion::arrow::pyarrow::PyArrowConvert;
 use datafusion::arrow::util::pretty;

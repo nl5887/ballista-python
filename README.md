@@ -17,15 +17,13 @@
   under the License.
 -->
 
-# DataFusion in Python
+# Ballista in Python
 
 [![Python test](https://github.com/datafusion-contrib/datafusion-python/actions/workflows/test.yaml/badge.svg)](https://github.com/datafusion-contrib/datafusion-python/actions/workflows/test.yaml)
 
 This is a Python library that binds to [Apache Arrow](https://arrow.apache.org/) in-memory query engine [DataFusion](https://github.com/apache/arrow-datafusion).
 
 Like pyspark, it allows you to build a plan through SQL or a DataFrame API against in-memory data, parquet or CSV files, run it in a multi-threaded environment, and obtain the result back in Python.
-
-It also allows you to use UDFs and UDAFs for complex operations.
 
 The major advantage of this library over other execution engines is that this library achieves zero-copy between Python and its execution engine: there is no cost in using UDFs, UDAFs, and collecting the results to Python apart from having to lock the GIL when running those operations.
 
@@ -38,109 +36,27 @@ Technically, zero-copy is achieved via the [c data interface](https://arrow.apac
 Simple usage:
 
 ```python
-import datafusion
-from datafusion import functions as f
-from datafusion import col
-import pyarrow
-
-# create a context
-ctx = datafusion.SessionContext()
-
-# create a RecordBatch and a new DataFrame from it
-batch = pyarrow.RecordBatch.from_arrays(
-    [pyarrow.array([1, 2, 3]), pyarrow.array([4, 5, 6])],
-    names=["a", "b"],
-)
-df = ctx.create_dataframe([[batch]])
-
-# create a new statement
-df = df.select(
-    col("a") + col("b"),
-    col("a") - col("b"),
-)
-
-# execute and collect the first (and only) batch
-result = df.collect()[0]
-
-assert result.column(0) == pyarrow.array([5, 7, 9])
-assert result.column(1) == pyarrow.array([-3, -3, -3])
-```
-
-### UDFs
-
-```python
-from datafusion import udf
-
-def is_null(array: pyarrow.Array) -> pyarrow.Array:
-    return array.is_null()
-
-is_null_arr = udf(is_null, [pyarrow.int64()], pyarrow.bool_(), 'stable')
-
-df = df.select(is_null_arr(col("a")))
-
-result = df.collect()
-
-assert result.column(0) == pyarrow.array([False] * 3)
-```
-
-### UDAF
-
-```python
-import pyarrow
-import pyarrow.compute
-from datafusion import udaf, Accumulator
-
-
-class MyAccumulator(Accumulator):
-    """
-    Interface of a user-defined accumulation.
-    """
-    def __init__(self):
-        self._sum = pyarrow.scalar(0.0)
-
-    def update(self, values: pyarrow.Array) -> None:
-        # not nice since pyarrow scalars can't be summed yet. This breaks on `None`
-        self._sum = pyarrow.scalar(self._sum.as_py() + pyarrow.compute.sum(values).as_py())
-
-    def merge(self, states: pyarrow.Array) -> None:
-        # not nice since pyarrow scalars can't be summed yet. This breaks on `None`
-        self._sum = pyarrow.scalar(self._sum.as_py() + pyarrow.compute.sum(states).as_py())
-
-    def state(self) -> pyarrow.Array:
-        return pyarrow.array([self._sum.as_py()])
-
-    def evaluate(self) -> pyarrow.Scalar:
-        return self._sum
-
-
-df = ctx.create_dataframe([[batch]])
-
-my_udaf = udaf(MyAccumulator, pyarrow.float64(), pyarrow.float64(), [pyarrow.float64()], 'stable')
-
-df = df.aggregate(
-    [],
-    [my_udaf(col("a"))]
-)
-
-result = df.collect()[0]
-
-assert result.column(0) == pyarrow.array([6.0])
+import ballista
+ctx = ballista.BallistaContext(host="host.docker.internal")
+ctx.register_parquet("table", "/data")
+df = ctx.sql("SELECT * FROM table LIMIT 10")
+df.show()
 ```
 
 ## How to install (from pip)
 
 ```bash
-pip install datafusion
+pip install ballista
 # or
-python -m pip install datafusion
+python -m pip install ballista
 ```
 
 You can verify the installation by running:
 
 ```python
->>> import datafusion
->>> datafusion.__version__
-'0.5.2'
+>>> import ballista
+>>> ballista.__version__
+'0.6.0'
 ```
 
 ## How to develop
