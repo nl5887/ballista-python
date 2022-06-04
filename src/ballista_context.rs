@@ -36,15 +36,15 @@ pub(crate) struct PyBallistaContext {
 
 #[pymethods]
 impl PyBallistaContext {
-    // TODO(kszucs): should expose the configuration options as keyword arguments
     #[new]
-    fn new(py: Python) -> PyResult<Self> {
+    #[args(port = "50050")]
+    fn new(py: Python, host: &str, port: u16) -> PyResult<Self> {
         let config = BallistaConfig::builder()
             .set("ballista.shuffle.partitions", "4")
             .build()
             .map_err(BallistaError::from)?;
 
-        let result = BallistaContext::remote("host.docker.internal", 50050, &config);
+        let result = BallistaContext::remote(host, port, &config);
         let ctx = wait_for_future(py, result).map_err(BallistaError::from)?;
 
         Ok(PyBallistaContext { ctx })
