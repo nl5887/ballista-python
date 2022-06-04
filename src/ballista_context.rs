@@ -29,7 +29,7 @@ use datafusion::prelude::{AvroReadOptions, CsvReadOptions, ParquetReadOptions};
 /// `PyBallistaContext` is able to plan and execute DataFusion plans.
 /// It has a powerful optimizer, a physical planner for local execution, and a
 /// multi-threaded execution engine to perform the execution.
-#[pyclass(name = "BallistaContext", module = "datafusion", subclass, unsendable)]
+#[pyclass(name = "BallistaContext", module = "ballista", subclass, unsendable)]
 pub(crate) struct PyBallistaContext {
     ctx: BallistaContext,
 }

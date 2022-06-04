@@ -40,11 +40,11 @@ mimalloc = { version = "*", default-features = false }
 ballista = { git = "https://github.com/apache/arrow-ballista", rev = "9e78b8ecd55cc3e9d46387c87098c4e6625294eb"}
 
 [lib]
-name = "datafusion_python"
+name = "ballista_python"
 crate-type = ["cdylib", "rlib"]
 
 [package.metadata.maturin]
-name = "datafusion._internal"
+name = "ballista._internal"
 
 [profile.release]
 lto = true

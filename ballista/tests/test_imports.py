@@ -17,8 +17,8 @@
 
 import pytest
 
-import datafusion
-from datafusion import (
+import ballista
+from ballista import (
     AggregateUDF,
     DataFrame,
     SessionContext,
@@ -28,15 +28,15 @@ from datafusion import (
 )
 
 
-def test_import_datafusion():
-    assert datafusion.__name__ == "datafusion"
+def test_import_ballista():
+    assert ballista.__name__ == "ballista"
 
 
-def test_datafusion_python_version():
-    assert datafusion.__version__ is not None
+def test_ballista_python_version():
+    assert ballista.__version__ is not None
 
 
-def test_class_module_is_datafusion():
+def test_class_module_is_ballista():
     for klass in [
         SessionContext,
         Expression,
@@ -44,18 +44,18 @@ def test_class_module_is_datafusion():
         ScalarUDF,
         AggregateUDF,
     ]:
-        assert klass.__module__ == "datafusion"
+        assert klass.__module__ == "ballista"
 
 
 def test_import_from_functions_submodule():
-    from datafusion.functions import abs, sin  # noqa
+    from ballista.functions import abs, sin  # noqa
 
     assert functions.abs is abs
     assert functions.sin is sin
 
-    msg = "cannot import name 'foobar' from 'datafusion.functions'"
+    msg = "cannot import name 'foobar' from 'ballista.functions'"
     with pytest.raises(ImportError, match=msg):
-        from datafusion.functions import foobar  # noqa
+        from ballista.functions import foobar  # noqa
 
 
 def test_classes_are_inheritable():
